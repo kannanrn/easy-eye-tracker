@@ -6,6 +6,7 @@
 #include <queue>
 #include <stdio.h>
 #include <math.h>
+#include <ctime>
 
 #include "helpers.h"
 #include "constants.h"
@@ -13,6 +14,8 @@
 #include "findEyeCorner.h"
 #include "eyeTracker.h"
 #include "globalVariables.h"
+
+#define NUM_SECONDS 5
 
 
 /**
@@ -25,9 +28,15 @@ int main( int argc, const char** argv ) {
   int width;
   int height;
   getScreenResolution(width, height);
-  printf("WIDTH:%d    HEIGHT:%d", width, height);
-//yaourt -S libx11-dev
-//da sistemare anche cmake
+
+  cv::Point refLeftPupil;
+  cv::Point refRightPupil;
+
+  int cam_width;
+  int cam_height;
+
+
+
   std::deque<cv::Point> leftQueue;
   std::deque<cv::Point> rightQueue;
   cv::Point fillerPoint(0,0);
@@ -61,6 +70,17 @@ int main( int argc, const char** argv ) {
     cv::Point avgLeftPupil;
     cv::Point avgRightPupil;
 
+    int cont = 0;
+    clock_t this_time = clock();
+    clock_t last_time = this_time;
+    double time_counter = 0;
+    capture.read(frame);
+    cam_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
+    cam_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
+    printf("CAM W: %d      CAM H: %d \n", cam_width, cam_height);
+
+
+    //CALIBRATION
     while(calibrate) {
       capture.read(frame);
       // mirror it
@@ -81,9 +101,19 @@ int main( int argc, const char** argv ) {
         rightQueue.pop_back();
         rightQueue.push_front(rightPupil);
         detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
-        printf("R: %d   L:%d\n", avgRightPupil.x, avgRightPupil.y);
-        //printf("R: %d   L:%d\n", leftPupil.x, leftPupil.y);
-        //printf("R(%d, %d)   L(%d,%d) \n", rightQueue[4].x, rightQueue[4].y, leftQueue[4].x, leftQueue[4].y);
+        refLeftPupil.x += avgLeftPupil.x;
+        refLeftPupil.y += avgLeftPupil.y;
+        refRightPupil.x += avgRightPupil.x;
+        refRightPupil.y += avgRightPupil.y;
+        this_time = clock();
+        time_counter += (double)(this_time-last_time);
+        last_time = this_time;
+        cont ++;
+        if(time_counter > (double)(NUM_SECONDS*CLOCKS_PER_SEC)) {
+          calibrate = false;
+        }
+        //circle(debugImage, cv::Point(width/2, height/2), 5, cv::Scalar(0,0,255), CV_FILLED);
+        circle(debugImage, cv::Point(cam_width/2,cam_height/2), 5, cv::Scalar(0,0,255), CV_FILLED);
       }
       else {
         printf(" --(!) No captured frame -- Break!");
@@ -99,6 +129,17 @@ int main( int argc, const char** argv ) {
         imwrite("frame.png",frame);
       }
     }
+
+
+
+
+    refLeftPupil.x /= cont;
+    refLeftPupil.y /= cont;
+    refRightPupil.x /= cont;
+    refRightPupil.y /= cont;
+
+
+
 
     while( !calibrate ) {
       capture.read(frame);
@@ -129,6 +170,8 @@ int main( int argc, const char** argv ) {
         break;
       }
 
+      circle(debugImage, refLeftPupil, 5, cv::Scalar(0,0,255), CV_FILLED);
+      circle(debugImage, refRightPupil, 5, cv::Scalar(0,0,255), CV_FILLED);
       circle(debugImage, avgRightPupil, 3, 1234);
       circle(debugImage, avgLeftPupil, 3, 1234);
       imshow(main_window_name,debugImage);
