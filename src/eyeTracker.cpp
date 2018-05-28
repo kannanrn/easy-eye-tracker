@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <queue>
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 
 #include "constants.h"
 #include "findEyeCenter.h"
@@ -16,6 +16,8 @@
 #include "globalVariables.h"
 
 
+//#include <cunistd>
+//#include <iostream>
 
 
 std::vector<cv::Rect> detectFaces(cv::Mat gray_frame) {
@@ -24,9 +26,11 @@ std::vector<cv::Rect> detectFaces(cv::Mat gray_frame) {
   face_cascade.detectMultiScale( gray_frame, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE|CV_HAAR_FIND_BIGGEST_OBJECT, cv::Size(150, 150) );
 
   //-- Show what you got
-  //for( int i = 0; i < faces.size(); i++ ) {
-  //  rectangle(debugImage, faces[i], 1234);
-  //}
+  for( int i = 0; i < faces.size(); i++ ) {
+    rectangle(debugImage, faces[i], 1234);
+    //std::cout << faces[i] << std::endl;
+    //sleep(5);
+  }
   return faces;
 }
 

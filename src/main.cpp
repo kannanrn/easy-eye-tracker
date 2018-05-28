@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <queue>
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 #include <ctime>
 
 #include "helpers.h"

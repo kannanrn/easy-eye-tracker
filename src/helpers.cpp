@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <queue>
-#include <stdio.h>
+#include <cstdio>
 
 #include "constants.h"
 
