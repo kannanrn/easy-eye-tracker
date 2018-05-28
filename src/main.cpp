@@ -22,24 +22,35 @@
  * @function main
  */
 int main( int argc, const char** argv ) {
+
+  // Matrix used to stored the frames captured by the camera
   cv::Mat frame;
+
+  // Variable used to detect if calibrate or not
   bool calibrate = true;
 
+  // Heigh and width of the monitor
   int width;
   int height;
   getScreenResolution(width, height);
 
+  // Those points represent the reference points measured by the calibration
   cv::Point refLeftPupil;
   cv::Point refRightPupil;
 
+  // Dimension of the frames captured by the camera
   int cam_width;
   int cam_height;
 
 
-
+  /*
+  * Inside those queues are stored the values of the points used to calculate the average point.
+  * This is used to minimize the errors.
+  */
   std::deque<cv::Point> leftQueue;
   std::deque<cv::Point> rightQueue;
   cv::Point fillerPoint(0,0);
+  // Filling the queues to useless points
   for(int i = 0; i < kQueueSize; i++) {
     leftQueue.push_front(fillerPoint);
     rightQueue.push_front(fillerPoint);
@@ -65,22 +76,26 @@ int main( int argc, const char** argv ) {
   cv::VideoCapture capture(0);
   if( capture.isOpened() ) {
 
+    // Current points of the pupils
     cv::Point leftPupil;
     cv::Point rightPupil;
+    // Average points of the pupils, calculated using the queus
     cv::Point avgLeftPupil;
     cv::Point avgRightPupil;
 
+    // Counter used to track every round of the calibration loop
     int cont = 0;
+    // Inizializing the time
     clock_t this_time = clock();
     clock_t last_time = this_time;
     double time_counter = 0;
+    // Setting the height and width of the frame captured by the camera
     capture.read(frame);
     cam_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
     cam_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
-    printf("CAM W: %d      CAM H: %d \n", cam_width, cam_height);
 
 
-    //CALIBRATION
+    //CALIBRATION LOOP
     while(calibrate) {
       capture.read(frame);
       // mirror it
@@ -88,31 +103,42 @@ int main( int argc, const char** argv ) {
       frame.copyTo(debugImage);
       // Apply the classifier to the frame
       if( !frame.empty() ) {
+        // Converting the image to gray scale
         cv::Mat gray_frame;
         cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
+        // Storing the detect faces
         std::vector<cv::Rect> faces = detectFaces(gray_frame);
-        //-- Show what you got
+        // Detect eyes in the stored face
         if (faces.size() > 0) {
           findEyes(gray_frame, faces[0], leftPupil, rightPupil);
         }
+
+        //Updating the pupil queues
         leftQueue.pop_back();
         leftQueue.push_front(leftPupil);
         rightQueue.pop_back();
         rightQueue.push_front(rightPupil);
+
+        // Calculating the average point of the pupils
         detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
+
+        //Setting the reference position of the pupils
         refLeftPupil.x += avgLeftPupil.x;
         refLeftPupil.y += avgLeftPupil.y;
         refRightPupil.x += avgRightPupil.x;
         refRightPupil.y += avgRightPupil.y;
+
+        // Calculating the time passed at the start of the calibration
         this_time = clock();
         time_counter += (double)(this_time-last_time);
         last_time = this_time;
         cont ++;
+        // Check if the calibration time is over
         if(time_counter > (double)(NUM_SECONDS*CLOCKS_PER_SEC)) {
           calibrate = false;
         }
-        //circle(debugImage, cv::Point(width/2, height/2), 5, cv::Scalar(0,0,255), CV_FILLED);
+        // Drawing the point to watch during the calibration
         circle(debugImage, cv::Point(cam_width/2,cam_height/2), 5, cv::Scalar(0,0,255), CV_FILLED);
       }
       else {
@@ -120,9 +146,11 @@ int main( int argc, const char** argv ) {
         break;
       }
 
+      // Drawing the current position of the pupils
       circle(debugImage, avgRightPupil, 3, 1234);
       circle(debugImage, avgLeftPupil, 3, 1234);
       imshow(main_window_name,debugImage);
+
       int c = cv::waitKey(10);
       if( (char)c == 'c' ) { break; }
       if( (char)c == 'f' ) {
@@ -130,16 +158,13 @@ int main( int argc, const char** argv ) {
       }
     }
 
-
-
-
+    // Finishing to calculate the reference points
     refLeftPupil.x /= cont;
     refLeftPupil.y /= cont;
     refRightPupil.x /= cont;
     refRightPupil.y /= cont;
 
-
-
+    //-------END CALIBRATION---------
 
     while( !calibrate ) {
       capture.read(frame);
