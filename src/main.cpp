@@ -23,7 +23,7 @@
  */
 int main( int argc, const char** argv ) {
 
-  // Matrix used to stored the frames captured by the camera
+  // Matrix used to store the frames captured by the camera
   cv::Mat frame;
 
   // Variable used to detect if calibrate or not
@@ -34,7 +34,7 @@ int main( int argc, const char** argv ) {
   int height;
   getScreenResolution(width, height);
 
-  // Those points represent the reference points measured by the calibration
+  // Those points represent the reference points measured during the calibration
   cv::Point refLeftPupil;
   cv::Point refRightPupil;
 
@@ -44,7 +44,7 @@ int main( int argc, const char** argv ) {
 
 
   /*
-  * Inside those queues are stored the values of the points used to calculate the average point.
+  *  the values of the points used to calculate the average point.are stored  Inside those queues
   * This is used to minimize the errors.
   */
   std::deque<cv::Point> leftQueue;
@@ -103,11 +103,11 @@ int main( int argc, const char** argv ) {
       frame.copyTo(debugImage);
       // Apply the classifier to the frame
       if( !frame.empty() ) {
-        // Converting the image to gray scale
+        // Converting the image to grey scale
         cv::Mat gray_frame;
         cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
-        // Storing the detect faces
+        // Storing the detected faces
         std::vector<cv::Rect> faces = detectFaces(gray_frame);
         // Detect eyes in the stored face
         if (faces.size() > 0) {
@@ -129,7 +129,7 @@ int main( int argc, const char** argv ) {
         refRightPupil.x += avgRightPupil.x;
         refRightPupil.y += avgRightPupil.y;
 
-        // Calculating the time passed at the start of the calibration
+        // Calculating the time passed from the start of the calibration
         this_time = clock();
         time_counter += (double)(this_time-last_time);
         last_time = this_time;
@@ -158,7 +158,7 @@ int main( int argc, const char** argv ) {
       }
     }
 
-    // Finishing to calculate the reference points
+    // end of calculating the reference points
     refLeftPupil.x /= cont;
     refLeftPupil.y /= cont;
     refRightPupil.x /= cont;
