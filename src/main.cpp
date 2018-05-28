@@ -44,7 +44,7 @@ int main( int argc, const char** argv ) {
 
 
   /*
-  *  the values of the points used to calculate the average point.are stored  Inside those queues
+  * The values of the points used to calculate the average point are stored inside those queues.
   * This is used to minimize the errors.
   */
   std::deque<cv::Point> leftQueue;
@@ -114,7 +114,7 @@ int main( int argc, const char** argv ) {
           findEyes(gray_frame, faces[0], leftPupil, rightPupil);
         }
 
-        //Updating the pupil queues
+        // Updating the pupil queues
         leftQueue.pop_back();
         leftQueue.push_front(leftPupil);
         rightQueue.pop_back();
@@ -158,7 +158,7 @@ int main( int argc, const char** argv ) {
       }
     }
 
-    // end of calculating the reference points
+    // End of calculating the reference points
     refLeftPupil.x /= cont;
     refLeftPupil.y /= cont;
     refRightPupil.x /= cont;
