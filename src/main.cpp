@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cmath>
 #include <ctime>
-#include <cunistd>
+#include <unistd.h>
 
 #include "helpers.h"
 #include "constants.h"
@@ -16,7 +16,7 @@
 #include "eyeTracker.h"
 #include "globalVariables.h"
 
-#define NUM_SECONDS 5
+#define NUM_SECONDS 8
 
 struct DetectFaceParams {
   bool draw = false;
@@ -89,7 +89,7 @@ int main( int argc, const char** argv ) {
   if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n"); return -1; };
 
   cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
-  cv::moveWindow(main_window_name, 400, 100);
+
   cv::namedWindow("Detecting Face",CV_WINDOW_NORMAL);
   cv::moveWindow("Detecting Face", 600, 400);
   cv::setMouseCallback("Detecting Face", mouse_callback, (void*)&detectFaceParams);
@@ -120,7 +120,8 @@ int main( int argc, const char** argv ) {
     cam_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
     cam_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
 
-
+    //cv::moveWindow(main_window_name, width/2-(cam_width/2), height/2-(cam_height/2));
+    cv::moveWindow(main_window_name, width/2, height/2);
     while(detectFaceParams.detectFace) {
       capture.read(frame);
       cv::flip(frame, frame, 1);
@@ -148,25 +149,24 @@ int main( int argc, const char** argv ) {
     clock_t this_time = clock();
     clock_t last_time = this_time;
     double time_counter = 0;
+    bool redPoint = true;
+    cv::Scalar pointColor = cv::Scalar(0,0,255);
     //CALIBRATION LOOP
     while(calibrate) {
       capture.read(frame);
       // mirror it
       cv::flip(frame, frame, 1);
       frame.copyTo(debugImage);
+
       // Apply the classifier to the frame
       if( !frame.empty() ) {
         // Converting the image to grey scale
         cv::Mat gray_frame;
         cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
-        // Storing the detected faces
-        //std::vector<cv::Rect> faces = detectFaces(gray_frame);
-        // Detect eyes in the stored face
-        //if (faces.size() > 0) {
-          findEyes(gray_frame, detectFaceParams.face, leftPupil, rightPupil);
-          //findEyes(gray_frame, faces[0], leftPupil, rightPupil);
-        //}
+
+        findEyes(gray_frame, detectFaceParams.face, leftPupil, rightPupil);
+
 
         // Updating the pupil queues
         leftQueue.pop_back();
@@ -188,12 +188,15 @@ int main( int argc, const char** argv ) {
         time_counter += (double)(this_time-last_time);
         last_time = this_time;
         cont ++;
+        if(time_counter > (double)((NUM_SECONDS-5)*CLOCKS_PER_SEC)) {
+          pointColor = cv::Scalar(0,255,0);
+        }
         // Check if the calibration time is over
         if(time_counter > (double)(NUM_SECONDS*CLOCKS_PER_SEC)) {
           calibrate = false;
         }
         // Drawing the point to watch during the calibration
-        circle(debugImage, cv::Point(cam_width/2,cam_height/2), 5, cv::Scalar(0,0,255), CV_FILLED);
+        circle(debugImage, cv::Point(cam_width/2,cam_height/2), 5, pointColor, CV_FILLED);
       }
       else {
         printf(" --(!) No captured frame -- Break!");
