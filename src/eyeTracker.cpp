@@ -89,25 +89,6 @@ void findEyes(cv::Mat frame_gray, cv::Rect face, cv::Point &leftPupil, cv::Point
   circle(debugFace, rightPupil, 3, 1234);
   circle(debugFace, leftPupil, 3, 1234);
 
-  //-- Find Eye Corners
-  if (kEnableEyeCorner) {
-    cv::Point2f leftRightCorner = findEyeCorner(faceROI(leftRightCornerRegion), true, false);
-    leftRightCorner.x += leftRightCornerRegion.x;
-    leftRightCorner.y += leftRightCornerRegion.y;
-    cv::Point2f leftLeftCorner = findEyeCorner(faceROI(leftLeftCornerRegion), true, true);
-    leftLeftCorner.x += leftLeftCornerRegion.x;
-    leftLeftCorner.y += leftLeftCornerRegion.y;
-    cv::Point2f rightLeftCorner = findEyeCorner(faceROI(rightLeftCornerRegion), false, true);
-    rightLeftCorner.x += rightLeftCornerRegion.x;
-    rightLeftCorner.y += rightLeftCornerRegion.y;
-    cv::Point2f rightRightCorner = findEyeCorner(faceROI(rightRightCornerRegion), false, false);
-    rightRightCorner.x += rightRightCornerRegion.x;
-    rightRightCorner.y += rightRightCornerRegion.y;
-    circle(faceROI, leftRightCorner, 3, 200);
-    circle(faceROI, leftLeftCorner, 3, 200);
-    circle(faceROI, rightLeftCorner, 3, 200);
-    circle(faceROI, rightRightCorner, 3, 200);
-  }
 
   imshow(face_window_name, faceROI);
 }

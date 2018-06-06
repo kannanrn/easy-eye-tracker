@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cmath>
 #include <ctime>
+#include <cunistd>
 
 #include "helpers.h"
 #include "constants.h"
@@ -17,6 +18,32 @@
 
 #define NUM_SECONDS 5
 
+struct DetectFaceParams {
+  bool draw = false;
+  bool detectFace;
+  cv::Point startPoint;
+  cv::Point endPoint;
+  cv::Rect face;
+  cv::Mat frame;
+};
+
+
+void mouse_callback(int  event, int  x, int  y, int  flag, void *param)
+{
+  DetectFaceParams* detectFaceParams = (DetectFaceParams*)param;
+  if(!detectFaceParams->detectFace)
+    return;
+
+    detectFaceParams->endPoint = cv::Point(x,y);
+  if (event == cv::EVENT_LBUTTONDOWN) {
+    detectFaceParams->draw = true;
+    detectFaceParams->startPoint = cv::Point(x,y);
+  }
+  if (event == cv::EVENT_LBUTTONUP) {
+    detectFaceParams->face = cv::Rect(detectFaceParams->startPoint, detectFaceParams->endPoint);
+    detectFaceParams->detectFace = false;
+  }
+}
 
 /**
  * @function main
@@ -28,6 +55,8 @@ int main( int argc, const char** argv ) {
 
   // Variable used to detect if calibrate or not
   bool calibrate = true;
+  DetectFaceParams detectFaceParams;
+  detectFaceParams.detectFace = true;
 
   // Heigh and width of the monitor
   int width;
@@ -61,6 +90,9 @@ int main( int argc, const char** argv ) {
 
   cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
   cv::moveWindow(main_window_name, 400, 100);
+  cv::namedWindow("Detecting Face",CV_WINDOW_NORMAL);
+  cv::moveWindow("Detecting Face", 600, 400);
+  cv::setMouseCallback("Detecting Face", mouse_callback, (void*)&detectFaceParams);
   cv::namedWindow(face_window_name,CV_WINDOW_NORMAL);
   cv::moveWindow(face_window_name, 10, 100);
   cv::namedWindow("Right Eye",CV_WINDOW_NORMAL);
@@ -73,7 +105,7 @@ int main( int argc, const char** argv ) {
   ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
           43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
 
-  cv::VideoCapture capture(0);
+  cv::VideoCapture capture(1);
   if( capture.isOpened() ) {
 
     // Current points of the pupils
@@ -83,18 +115,39 @@ int main( int argc, const char** argv ) {
     cv::Point avgLeftPupil;
     cv::Point avgRightPupil;
 
-    // Counter used to track every round of the calibration loop
-    int cont = 0;
-    // Inizializing the time
-    clock_t this_time = clock();
-    clock_t last_time = this_time;
-    double time_counter = 0;
     // Setting the height and width of the frame captured by the camera
     capture.read(frame);
     cam_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
     cam_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
 
 
+    while(detectFaceParams.detectFace) {
+      capture.read(frame);
+      cv::flip(frame, frame, 1);
+      cv::cvtColor(frame, frame, CV_BGR2GRAY);
+      detectFaceParams.frame = frame;
+      if(detectFaceParams.draw){
+        rectangle(frame, cv::Rect(detectFaceParams.startPoint, detectFaceParams.endPoint),1234);
+      }
+      cv::imshow("Detecting Face", frame);
+      int c = cv::waitKey(10);
+      if( (char)c == 'c' ) { break; }
+      if( (char)c == 'f' ) {
+        imwrite("frame.png",frame);
+      }
+    }
+    std::cout << detectFaceParams.face << std::endl;
+    cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
+    cv::moveWindow(main_window_name, 400, 100);
+    cv::destroyWindow("Detecting Face");
+
+
+    // Counter used to track every round of the calibration loop
+    int cont = 0;
+    // Inizializing the time
+    clock_t this_time = clock();
+    clock_t last_time = this_time;
+    double time_counter = 0;
     //CALIBRATION LOOP
     while(calibrate) {
       capture.read(frame);
@@ -108,11 +161,12 @@ int main( int argc, const char** argv ) {
         cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
         // Storing the detected faces
-        std::vector<cv::Rect> faces = detectFaces(gray_frame);
+        //std::vector<cv::Rect> faces = detectFaces(gray_frame);
         // Detect eyes in the stored face
-        if (faces.size() > 0) {
-          findEyes(gray_frame, faces[0], leftPupil, rightPupil);
-        }
+        //if (faces.size() > 0) {
+          findEyes(gray_frame, detectFaceParams.face, leftPupil, rightPupil);
+          //findEyes(gray_frame, faces[0], leftPupil, rightPupil);
+        //}
 
         // Updating the pupil queues
         leftQueue.pop_back();
@@ -123,7 +177,7 @@ int main( int argc, const char** argv ) {
         // Calculating the average point of the pupils
         detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
 
-        //Setting the reference position of the pupils
+        // Setting the reference position of the pupils
         refLeftPupil.x += avgLeftPupil.x;
         refLeftPupil.y += avgLeftPupil.y;
         refRightPupil.x += avgRightPupil.x;
@@ -168,7 +222,7 @@ int main( int argc, const char** argv ) {
 
     while( !calibrate ) {
       capture.read(frame);
-      // mirror it
+      // Mirror it
       cv::flip(frame, frame, 1);
       frame.copyTo(debugImage);
       // Apply the classifier to the frame
@@ -176,17 +230,19 @@ int main( int argc, const char** argv ) {
         cv::Mat gray_frame;
         cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
+        /*
         std::vector<cv::Rect> faces = detectFaces(gray_frame);
         //-- Show what you got
         if (faces.size() > 0) {
           findEyes(gray_frame, faces[0], leftPupil, rightPupil);
-        }
+        }*/
+        findEyes(gray_frame, detectFaceParams.face, leftPupil, rightPupil);
         leftQueue.pop_back();
         leftQueue.push_front(leftPupil);
         rightQueue.pop_back();
         rightQueue.push_front(rightPupil);
         detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
-        printf("R: %d   L:%d\n", avgRightPupil.x, avgRightPupil.y);
+        //printf("L: %d   R:%d\n", avgRightPupil.y, avgRightPupil.x);
         //printf("R: %d   L:%d\n", leftPupil.x, leftPupil.y);
         //printf("R(%d, %d)   L(%d,%d) \n", rightQueue[4].x, rightQueue[4].y, leftQueue[4].x, leftQueue[4].y);
       }
