@@ -48,8 +48,6 @@ void mouse_callback(int event, int x, int y, int flag, void *param) {
  */
 int main(int argc, const char **argv) {
 
-
-
     // Matrix used to store the frames captured by the camera
     cv::Mat frame;
 
@@ -62,10 +60,6 @@ int main(int argc, const char **argv) {
     int width;
     int height;
     getScreenResolution(width, height);
-    //std::cout << width << std::endl;
-    //std::cout << width/2 << std::endl;
-    //std::cout << height << std::endl;
-    //std::cout << height/2 << std::endl;
 
     // Those points represent the reference points measured during the calibration
     cv::Point refLeftPupil[6];
@@ -85,7 +79,7 @@ int main(int argc, const char **argv) {
     std::deque<cv::Point> leftQueue;
     std::deque<cv::Point> rightQueue;
     cv::Point fillerPoint(0, 0);
-    // Filling the queues to useless points
+    // Filling the queues of useless points
     for (int i = 0; i < kQueueSize; i++) {
         leftQueue.push_front(fillerPoint);
         rightQueue.push_front(fillerPoint);
@@ -98,10 +92,7 @@ int main(int argc, const char **argv) {
     };
 
     cv::namedWindow(main_window_name, CV_WINDOW_NORMAL);
-
     cv::namedWindow("Detecting Face", CV_WINDOW_NORMAL);
-
-
     cv::setMouseCallback("Detecting Face", mouse_callback, (void *) &detectFaceParams);
     cv::namedWindow(face_window_name, CV_WINDOW_NORMAL);
     cv::moveWindow(face_window_name, 10, 100);
@@ -152,12 +143,10 @@ int main(int argc, const char **argv) {
 
         cv::Mat referenceBackground(80, 80, CV_8UC3, cv::Scalar(255, 255, 255));
         cv::Point refPosition(width / 2 - 40, height - 105);
-        std::cout << refPosition << " PUNTO" << std::endl;
         cv::namedWindow("Reference Point");
 
 
         for (int i = 0; i < 6; i++) {
-
 
             // Counter used to track every round of the calibration loop
             int cont = 0;
@@ -165,7 +154,7 @@ int main(int argc, const char **argv) {
             clock_t this_time = clock();
             clock_t last_time = this_time;
             double time_counter = 0;
-            bool redPoint = true;
+            //bool redPoint = true;
             cv::moveWindow("Reference Point", refPosition.x, refPosition.y);
             cv::Scalar pointColor = cv::Scalar(0, 0, 255);
 
@@ -274,22 +263,12 @@ int main(int argc, const char **argv) {
             if (!frame.empty()) {
                 cv::Mat gray_frame;
                 cv::cvtColor(frame, gray_frame, CV_BGR2GRAY);
-
-                /*
-                std::vector<cv::Rect> faces = detectFaces(gray_frame);
-                //-- Show what you got
-                if (faces.size() > 0) {
-                  findEyes(gray_frame, faces[0], leftPupil, rightPupil);
-                }*/
                 findEyes(gray_frame, detectFaceParams.face, leftPupil, rightPupil);
                 leftQueue.pop_back();
                 leftQueue.push_front(leftPupil);
                 rightQueue.pop_back();
                 rightQueue.push_front(rightPupil);
                 detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
-                //printf("L: %d   R:%d\n", avgRightPupil.y, avgRightPupil.x);
-                //printf("R: %d   L:%d\n", leftPupil.x, leftPupil.y);
-                //printf("R(%d, %d)   L(%d,%d) \n", rightQueue[4].x, rightQueue[4].y, leftQueue[4].x, leftQueue[4].y);
             } else {
                 printf(" --(!) No captured frame -- Break!");
                 break;

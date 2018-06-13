@@ -9,7 +9,5 @@ extern cv::RNG rng;
 extern std::string face_window_name;
 extern cv::Mat debugImage;
 extern cv::Mat skinCrCbHist;
-//extern std::queue<cv::Point> avgLeftEye;
-//extern std::queue<cv::Point> avgRightEye;
 
 #endif

@@ -13,5 +13,3 @@ std::string main_window_name = "Capture - Face detection";
 std::string face_window_name = "Capture - Face";
 cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
-//std::queue<cv::Point> avgLeftEye;
-//std::queue<cv::Point> avgRightEye;
