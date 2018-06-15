@@ -5,6 +5,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
+void mouseMove(int x, int y);
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil);
 void getScreenResolution(int &width, int &height);
 bool rectInImage(cv::Rect rect, cv::Mat image);

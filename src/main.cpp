@@ -43,6 +43,14 @@ void mouse_callback(int event, int x, int y, int flag, void *param) {
     }
 }
 
+int scale_x(int x, int ref_minx, int ref_width, int cam_width){
+  return ((x-ref_minx)*ref_width)/cam_width;
+}
+
+int scale_y(int y, int ref_miny, int ref_height, int cam_height){
+  return ((y-ref_miny)*ref_height)/cam_height;
+}
+
 /**
  * @function main
  */
@@ -269,6 +277,26 @@ int main(int argc, const char **argv) {
                 rightQueue.pop_back();
                 rightQueue.push_front(rightPupil);
                 detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
+
+                //Point calculation for leftPupil
+                cv::Point scaledLeftPupil;
+                scaledLeftPupil.x = scale_x(avgLeftPupil.x, refLeftPupil[2].x, refLeftPupil[4].x, cam_width);
+                scaledLeftPupil.y = scale_y(avgLeftPupil.y, refLeftPupil[2].y, refLeftPupil[1].y, cam_height);
+                printf("leftPupil x: %d y: %d", scaledLeftPupil.x, scaledLeftPupil.y);
+
+                //Point calculation for rigthPupil
+                cv::Point scaledRigthPupil;
+                scaledRigthPupil.x = scale_x(avgRightPupil.x, refRightPupil[2].x, refRightPupil[4].x, cam_width);
+                scaledRigthPupil.y = scale_y(avgRightPupil.y, refRightPupil[2].y, refRightPupil[1].y, cam_height);
+
+                cv::Point scaledAvgPupil;
+                scaledAvgPupil.x = (scaledLeftPupil.x+scaledRigthPupil.x)/2;
+                scaledAvgPupil.y = (scaledLeftPupil.y+scaledRigthPupil.y)/2;
+
+                //Set the mouse with the average of the two pupils
+                printf("avgPupil x: %d y: %d", scaledAvgPupil.x, scaledAvgPupil.y);
+                mouseMove(scaledAvgPupil.x, scaledAvgPupil.y);
+
             } else {
                 printf(" --(!) No captured frame -- Break!");
                 break;

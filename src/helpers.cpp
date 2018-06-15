@@ -14,6 +14,19 @@
   #include <X11/Xlib.h>
 #endif
 
+void mouseMove(int x, int y){
+  Display *dpy;
+  Window root_window;
+
+  dpy = XOpenDisplay(0);
+  root_window = XRootWindow(dpy, 0);
+  XSelectInput(dpy, root_window, KeyReleaseMask);
+
+  XWarpPointer(dpy, None, root_window, 0, 0, 0, 0, x, y);
+
+  XFlush(dpy);
+}
+
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil) {
   for(int i = 0; i < kQueueSize; i++) {
     avgRightPupil.x += rightQueue[i].x;

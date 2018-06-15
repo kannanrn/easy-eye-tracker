@@ -6,7 +6,7 @@
 
 
 //-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
-cv::String face_cascade_name = "../../res/haarcascade_frontalface_alt.xml";
+cv::String face_cascade_name = "../res/haarcascade_frontalface_alt.xml";
 cv::CascadeClassifier face_cascade;
 cv::RNG rng(12345);
 std::string main_window_name = "Capture - Face detection";
