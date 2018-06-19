@@ -14,6 +14,14 @@
   #include <X11/Xlib.h>
 #endif
 
+int scale_x(int x, int ref_minx, int ref_width, int cam_width){
+  return ((x-ref_minx)*ref_width)/cam_width;
+}
+
+int scale_y(int y, int ref_miny, int ref_height, int cam_height){
+  return ((y-ref_miny)*ref_height)/cam_height;
+}
+
 void mouseMove(int x, int y){
   Display *dpy;
   Window root_window;

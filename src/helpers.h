@@ -5,6 +5,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
+int scale_x(int x, int ref_minx, int ref_width, int cam_width);
+int scale_y(int y, int ref_miny, int ref_height, int cam_height);
 void mouseMove(int x, int y);
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil);
 void getScreenResolution(int &width, int &height);
