@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="eyelike_project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\share\;CMake Files\..\..\..\..\usr\share\opencv\;CMake Files\src\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="easy-eye-tracker">
+				<Option output="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/bin/easy-eye-tracker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/opencv"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 easy-eye-tracker"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="easy-eye-tracker/fast">
+				<Option output="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/bin/easy-eye-tracker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/opencv"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/../../../../include/c++/8.1.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 easy-eye-tracker/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/constants.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/eyeTracker.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/eyeTracker.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/findEyeCenter.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/findEyeCenter.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/findEyeCorner.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/findEyeCorner.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/globalVariables.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/globalVariables.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/helpers.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/helpers.h">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/main.cpp">
+			<Option target="easy-eye-tracker"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/../../../../usr/share/opencv/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\share\opencv\"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/../../../../usr/share/opencv/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\share\opencv\"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/../../../../usr/share/opencv/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\share\opencv\"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/../../../../usr/share/opencv/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\share\opencv\"/>
+		</Unit>
+		<Unit filename="/home/marco/Scrivania/easy-eye-tracker/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

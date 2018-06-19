@@ -43,6 +43,14 @@ void mouse_callback(int event, int x, int y, int flag, void *param) {
     }
 }
 
+int scale_x(int x, int ref_minx, int ref_width, int cam_width){
+  return ((x*ref_width)/cam_width)-ref_minx;
+}
+
+int scale_y(int y, int ref_miny, int ref_height, int cam_height){
+  return ((y*ref_height)/cam_height)-ref_miny;
+}
+
 /**
  * @function main
  */
@@ -56,6 +64,11 @@ int main(int argc, const char **argv) {
     DetectFaceParams detectFaceParams;
     detectFaceParams.detectFace = true;
 
+    Display *dpy;
+    Window root_window;
+
+    dpy = XOpenDisplay(0);
+    root_window = XRootWindow(dpy, 0);
     // Heigh and width of the monitor
     int width;
     int height;
@@ -274,7 +287,7 @@ int main(int argc, const char **argv) {
                 cv::Point scaledLeftPupil;
                 scaledLeftPupil.x = scale_x(avgLeftPupil.x, refLeftPupil[2].x, refLeftPupil[4].x, cam_width);
                 scaledLeftPupil.y = scale_y(avgLeftPupil.y, refLeftPupil[2].y, refLeftPupil[1].y, cam_height);
-                printf("leftPupil x: %d y: %d \n", scaledLeftPupil.x, scaledLeftPupil.y);
+                printf("leftPupil x: %d y: %d\n", scaledLeftPupil.x, scaledLeftPupil.y);
 
                 //Point calculation for rigthPupil
                 cv::Point scaledRigthPupil;
@@ -286,8 +299,9 @@ int main(int argc, const char **argv) {
                 scaledAvgPupil.y = (scaledLeftPupil.y+scaledRigthPupil.y)/2;
 
                 //Set the mouse with the average of the two pupils
-                printf("avgPupil x: %d y: %d \n", scaledAvgPupil.x, scaledAvgPupil.y);
-                mouseMove(scaledAvgPupil.x, scaledAvgPupil.y);
+                printf("avgPupil x: %d y: %d\n", scaledAvgPupil.x, scaledAvgPupil.y);
+
+                mouseMove(scaledAvgPupil.x, scaledAvgPupil.y, dpy, root_window);
 
             } else {
                 printf(" --(!) No captured frame -- Break!");

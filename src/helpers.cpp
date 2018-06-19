@@ -14,25 +14,14 @@
   #include <X11/Xlib.h>
 #endif
 
-int scale_x(int x, int ref_minx, int ref_width, int cam_width){
-  return ((x-ref_minx)*ref_width)/cam_width;
-}
+void mouseMove(int x, int y, Display* display, Window &window){
 
-int scale_y(int y, int ref_miny, int ref_height, int cam_height){
-  return ((y-ref_miny)*ref_height)/cam_height;
-}
 
-void mouseMove(int x, int y){
-  Display *dpy;
-  Window root_window;
+  XSelectInput(display, window, KeyReleaseMask);
 
-  dpy = XOpenDisplay(0);
-  root_window = XRootWindow(dpy, 0);
-  XSelectInput(dpy, root_window, KeyReleaseMask);
+  XWarpPointer(display, None, window, 0, 0, 0, 0, x, y);
 
-  XWarpPointer(dpy, None, root_window, 0, 0, 0, 0, x, y);
-
-  XFlush(dpy);
+  XFlush(display);
 }
 
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil) {

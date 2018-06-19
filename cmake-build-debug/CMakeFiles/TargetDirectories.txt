@@ -1,0 +1,5 @@
+/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+/home/marco/Scrivania/easy-eye-tracker/cmake-build-debug/src/CMakeFiles/easy-eye-tracker.dir

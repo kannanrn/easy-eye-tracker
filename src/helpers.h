@@ -4,10 +4,13 @@
 #include "opencv2/objdetect/objdetect.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#if WIN32
+    #include <windows.h>
+#else
+    #include <X11/Xlib.h>
+#endif
 
-int scale_x(int x, int ref_minx, int ref_width, int cam_width);
-int scale_y(int y, int ref_miny, int ref_height, int cam_height);
-void mouseMove(int x, int y);
+void mouseMove(int x, int y, Display* display, Window &window);
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil);
 void getScreenResolution(int &width, int &height);
 bool rectInImage(cv::Rect rect, cv::Mat image);
