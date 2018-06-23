@@ -1,6 +1,7 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include "opencv2/calib3d/calib3d.hpp"
 
 #include <iostream>
 #include <queue>
@@ -84,14 +85,22 @@ int main(int argc, const char **argv) {
     int cam_width;
     int cam_height;
 
-    cv::Point2f dstQuad[] = {
-            cv::Point2f(width/2, height),
-            cv::Point2f(0, height),
-            cv::Point2f(0,0),
-            cv::Point2f(width/2, 0),
-            cv::Point2f(width, 0),
-            cv::Point2f(width, height)
-    };
+    std::vector<cv::Point2f> dstPoints;
+    dstPoints.push_back(cv::Point2f(width/2, height));
+    dstPoints.push_back(cv::Point2f(0, height));
+    dstPoints.push_back(cv::Point2f(0,0));
+    dstPoints.push_back(cv::Point2f(width/2, 0));
+    dstPoints.push_back(cv::Point2f(width, 0));
+    dstPoints.push_back(cv::Point2f(width, height));
+//
+//    cv::Point2f dstQuad[] = {
+//            cv::Point2f(width/2, height),
+//            cv::Point2f(0, height),
+//            cv::Point2f(0,0),
+//            cv::Point2f(width/2, 0),
+//            cv::Point2f(width, 0),
+//            cv::Point2f(width, height)
+//    };
 
     /*
     * The values of the points used to calculate the average point are stored inside those queues.
@@ -276,15 +285,20 @@ int main(int argc, const char **argv) {
         //-------END CALIBRATION---------//
 
 
-        cv::Point2f srcQuad[] = {
-                cv::Point2f((refLeftPupil[0].x + refRightPupil[0].x)/2, (refLeftPupil[0].y + refRightPupil[0].y)/2),
-                cv::Point2f((refLeftPupil[1].x + refRightPupil[1].x)/2, (refLeftPupil[1].y + refRightPupil[1].y)/2),
-                cv::Point2f((refLeftPupil[2].x + refRightPupil[2].x)/2, (refLeftPupil[2].y + refRightPupil[2].y)/2),
-                cv::Point2f((refLeftPupil[3].x + refRightPupil[3].x)/2, (refLeftPupil[3].y + refRightPupil[3].y)/2),
-                cv::Point2f((refLeftPupil[4].x + refRightPupil[4].x)/2, (refLeftPupil[4].y + refRightPupil[4].y)/2),
-                cv::Point2f((refLeftPupil[5].x + refRightPupil[5].x)/2, (refLeftPupil[5].y + refRightPupil[5].y)/2)
-        };
-        cv::Mat warp_mat = cv::getPerspectiveTransform(srcQuad, dstQuad);
+        std::vector<cv::Point2f> srcPoints;
+        for(int i = 0; i < 6; i++) {
+            srcPoints.push_back(cv::Point2f((refLeftPupil[i].x + refRightPupil[i].x)/2, (refLeftPupil[i].y + refRightPupil[i].y)/2));
+        }
+//        cv::Point2f srcQuad[] = {
+//                cv::Point2f((refLeftPupil[0].x + refRightPupil[0].x)/2, (refLeftPupil[0].y + refRightPupil[0].y)/2),
+//                cv::Point2f((refLeftPupil[1].x + refRightPupil[1].x)/2, (refLeftPupil[1].y + refRightPupil[1].y)/2),
+//                cv::Point2f((refLeftPupil[2].x + refRightPupil[2].x)/2, (refLeftPupil[2].y + refRightPupil[2].y)/2),
+//                cv::Point2f((refLeftPupil[3].x + refRightPupil[3].x)/2, (refLeftPupil[3].y + refRightPupil[3].y)/2),
+//                cv::Point2f((refLeftPupil[4].x + refRightPupil[4].x)/2, (refLeftPupil[4].y + refRightPupil[4].y)/2),
+//                cv::Point2f((refLeftPupil[5].x + refRightPupil[5].x)/2, (refLeftPupil[5].y + refRightPupil[5].y)/2)
+//        };
+        //cv::Mat warp_mat = cv::getPerspectiveTransform(srcQuad, dstQuad);
+        cv::Mat warp_mat = cv::findHomography(srcPoints, dstPoints);
         std::vector<cv::Point2f> pupilPositions;
         std::vector<cv::Point2f> cursorPositions;
 
@@ -309,25 +323,7 @@ int main(int argc, const char **argv) {
                 pupilPositions.push_back(cv::Point((avgRightPupil.x + avgLeftPupil.x)/2, (avgRightPupil.y+avgLeftPupil.y)/2));
                 cv::perspectiveTransform(pupilPositions, cursorPositions, warp_mat);
                 pupilPositions.pop_back();
-                /*
-                //Point calculation for leftPupil
-                cv::Point2f scaledLeftPupil;
-                scaledLeftPupil.x = scale_x(avgLeftPupil.x, refLeftPupil[2].x, refLeftPupil[4].x, cam_width);
-                scaledLeftPupil.y = scale_y(avgLeftPupil.y, refLeftPupil[2].y, refLeftPupil[1].y, cam_height);
-                printf("leftPupil x: %d y: %d\n", scaledLeftPupil.x, scaledLeftPupil.y);
 
-                //Point calculation for rigthPupil
-                cv::Point2f scaledRigthPupil;
-                scaledRigthPupil.x = scale_x(avgRightPupil.x, refRightPupil[2].x, refRightPupil[4].x, cam_width);
-                scaledRigthPupil.y = scale_y(avgRightPupil.y, refRightPupil[2].y, refRightPupil[1].y, cam_height);
-
-                cv::Point2f scaledAvgPupil;
-                scaledAvgPupil.x = (scaledLeftPupil.x+scaledRigthPupil.x)/2;
-                scaledAvgPupil.y = (scaledLeftPupil.y+scaledRigthPupil.y)/2;
-
-                //Set the mouse with the average of the two pupils
-                printf("avgPupil x: %d y: %d\n", scaledAvgPupil.x, scaledAvgPupil.y);
-                 */
 
                 mouseMove(cursorPositions.front(), dpy, root_window);
                 cursorPositions.pop_back();

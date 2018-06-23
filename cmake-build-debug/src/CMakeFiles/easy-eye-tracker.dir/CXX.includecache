@@ -143,6 +143,8 @@ opencv2/highgui/highgui.hpp
 -
 opencv2/imgproc/imgproc.hpp
 -
+opencv2/calib3d/calib3d.hpp
+/home/marco/Scrivania/easy-eye-tracker/src/opencv2/calib3d/calib3d.hpp
 iostream
 -
 queue
