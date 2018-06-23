@@ -23,6 +23,15 @@ void mouseMove(int x, int y, Display* display, Window &window){
 
   XFlush(display);
 }
+void mouseMove(cv::Point2f position, Display* display, Window &window){
+
+
+  XSelectInput(display, window, KeyReleaseMask);
+
+  XWarpPointer(display, None, window, 0, 0, 0, 0, position.x, position.y);
+
+  XFlush(display);
+}
 
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil) {
   for(int i = 0; i < kQueueSize; i++) {

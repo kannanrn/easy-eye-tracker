@@ -11,6 +11,7 @@
 #endif
 
 void mouseMove(int x, int y, Display* display, Window &window);
+void mouseMove(cv::Point2f position, Display* display, Window &window);
 void detectAvgPupils(std::deque<cv::Point> &leftQueue,std::deque<cv::Point> &rightQueue, cv::Point &avgRightPupil, cv::Point &avgLeftPupil);
 void getScreenResolution(int &width, int &height);
 bool rectInImage(cv::Rect rect, cv::Mat image);

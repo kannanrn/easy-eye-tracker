@@ -75,8 +75,8 @@ int main(int argc, const char **argv) {
     getScreenResolution(width, height);
 
     // Those points represent the reference points measured during the calibration
-    cv::Point refLeftPupil[6];
-    cv::Point refRightPupil[6];
+    cv::Point2f refLeftPupil[6];
+    cv::Point2f refRightPupil[6];
     std::cout << refRightPupil[0] << std::endl;
 
 
@@ -84,6 +84,14 @@ int main(int argc, const char **argv) {
     int cam_width;
     int cam_height;
 
+    cv::Point2f dstQuad[] = {
+            cv::Point2f(width/2, height),
+            cv::Point2f(0, height),
+            cv::Point2f(0,0),
+            cv::Point2f(width/2, 0),
+            cv::Point2f(width, 0),
+            cv::Point2f(width, height)
+    };
 
     /*
     * The values of the points used to calculate the average point are stored inside those queues.
@@ -154,8 +162,8 @@ int main(int argc, const char **argv) {
         cv::destroyWindow("Detecting Face");
 
 
-        cv::Mat referenceBackground(80, 80, CV_8UC3, cv::Scalar(255, 255, 255));
-        cv::Point refPosition(width / 2 - 40, height - 105);
+        cv::Mat referenceBackground(64, 64, CV_8UC3, cv::Scalar(255, 255, 255));
+        cv::Point2f refPosition(width / 2 - 40, height - 105);
         cv::namedWindow("Reference Point");
 
 
@@ -215,9 +223,10 @@ int main(int argc, const char **argv) {
                     }
 
                     // Drawing the point to watch during the calibration
-                    circle(referenceBackground, cv::Point(40, 40), 40, pointColor, CV_FILLED);
-                    line(referenceBackground, cv::Point(40, 0), cv::Point(40, 80), cv::Scalar(0, 0, 0), 2);
-                    line(referenceBackground, cv::Point(0, 40), cv::Point(80, 40), cv::Scalar(0, 0, 0), 2);
+                    circle(referenceBackground, cv::Point2f(32, 32), 32, pointColor, CV_FILLED);
+                    circle(referenceBackground, cv::Point2f(32,32), 28, cv::Scalar(255,255,255), CV_FILLED);
+                    //line(referenceBackground, cv::Point2f(40, 0), cv::Point2f(40, 80), cv::Scalar(0, 0, 0), 2);
+                    //line(referenceBackground, cv::Point2f(0, 40), cv::Point2f(80, 40), cv::Scalar(0, 0, 0), 2);
                     imshow("Reference Point", referenceBackground);
                 } else {
                     printf(" --(!) No captured frame -- Break!");
@@ -266,6 +275,19 @@ int main(int argc, const char **argv) {
         }
         //-------END CALIBRATION---------//
 
+
+        cv::Point2f srcQuad[] = {
+                cv::Point2f((refLeftPupil[0].x + refRightPupil[0].x)/2, (refLeftPupil[0].y + refRightPupil[0].y)/2),
+                cv::Point2f((refLeftPupil[1].x + refRightPupil[1].x)/2, (refLeftPupil[1].y + refRightPupil[1].y)/2),
+                cv::Point2f((refLeftPupil[2].x + refRightPupil[2].x)/2, (refLeftPupil[2].y + refRightPupil[2].y)/2),
+                cv::Point2f((refLeftPupil[3].x + refRightPupil[3].x)/2, (refLeftPupil[3].y + refRightPupil[3].y)/2),
+                cv::Point2f((refLeftPupil[4].x + refRightPupil[4].x)/2, (refLeftPupil[4].y + refRightPupil[4].y)/2),
+                cv::Point2f((refLeftPupil[5].x + refRightPupil[5].x)/2, (refLeftPupil[5].y + refRightPupil[5].y)/2)
+        };
+        cv::Mat warp_mat = cv::getPerspectiveTransform(srcQuad, dstQuad);
+        std::vector<cv::Point2f> pupilPositions;
+        std::vector<cv::Point2f> cursorPositions;
+
         cv::destroyWindow("Reference Point");
         while (!calibrate) {
             capture.read(frame);
@@ -283,26 +305,32 @@ int main(int argc, const char **argv) {
                 rightQueue.push_front(rightPupil);
                 detectAvgPupils(leftQueue, rightQueue, avgRightPupil, avgLeftPupil);
 
+
+                pupilPositions.push_back(cv::Point((avgRightPupil.x + avgLeftPupil.x)/2, (avgRightPupil.y+avgLeftPupil.y)/2));
+                cv::perspectiveTransform(pupilPositions, cursorPositions, warp_mat);
+                pupilPositions.pop_back();
+                /*
                 //Point calculation for leftPupil
-                cv::Point scaledLeftPupil;
+                cv::Point2f scaledLeftPupil;
                 scaledLeftPupil.x = scale_x(avgLeftPupil.x, refLeftPupil[2].x, refLeftPupil[4].x, cam_width);
                 scaledLeftPupil.y = scale_y(avgLeftPupil.y, refLeftPupil[2].y, refLeftPupil[1].y, cam_height);
                 printf("leftPupil x: %d y: %d\n", scaledLeftPupil.x, scaledLeftPupil.y);
 
                 //Point calculation for rigthPupil
-                cv::Point scaledRigthPupil;
+                cv::Point2f scaledRigthPupil;
                 scaledRigthPupil.x = scale_x(avgRightPupil.x, refRightPupil[2].x, refRightPupil[4].x, cam_width);
                 scaledRigthPupil.y = scale_y(avgRightPupil.y, refRightPupil[2].y, refRightPupil[1].y, cam_height);
 
-                cv::Point scaledAvgPupil;
+                cv::Point2f scaledAvgPupil;
                 scaledAvgPupil.x = (scaledLeftPupil.x+scaledRigthPupil.x)/2;
                 scaledAvgPupil.y = (scaledLeftPupil.y+scaledRigthPupil.y)/2;
 
                 //Set the mouse with the average of the two pupils
                 printf("avgPupil x: %d y: %d\n", scaledAvgPupil.x, scaledAvgPupil.y);
+                 */
 
-                mouseMove(scaledAvgPupil.x, scaledAvgPupil.y, dpy, root_window);
-
+                mouseMove(cursorPositions.front(), dpy, root_window);
+                cursorPositions.pop_back();
             } else {
                 printf(" --(!) No captured frame -- Break!");
                 break;
