@@ -66,9 +66,9 @@ int main(int argc, const char **argv) {
 
     Display *dpy;
     Window root_window;
-
     dpy = XOpenDisplay(0);
     root_window = XRootWindow(dpy, 0);
+
     // Heigh and width of the monitor
     int width;
     int height;
@@ -353,6 +353,7 @@ int main(int argc, const char **argv) {
         //end if cap.isOpened()
     }
 
+    XCloseDisplay(dpy);
     releaseCornerKernels();
 
     return 0;

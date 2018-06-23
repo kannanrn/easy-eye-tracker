@@ -55,6 +55,7 @@ void getScreenResolution(int &width, int &height) {
   Screen* screen = DefaultScreenOfDisplay(disp);
   width = screen->width;
   height = screen->height;
+  XCloseDisplay(disp);
 #endif
 }
 
