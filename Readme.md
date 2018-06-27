@@ -1,5 +1,5 @@
 ## easy-eye-tracker
-This is an OpenCV based webcam gaze tracker based on [trishume project](https://github.com/trishume/eyeLike).
+This is an OpenCV based webcam gaze tracker based on eye tracking project from [trishume](https://github.com/trishume/eyeLike).
 
 
 ## Status
