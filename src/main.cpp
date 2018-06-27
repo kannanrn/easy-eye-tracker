@@ -136,7 +136,7 @@ int main(int argc, const char **argv) {
     ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
             43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
 
-    cv::VideoCapture capture(0);
+    cv::VideoCapture capture(1);
     if (capture.isOpened()) {
 
         // Current points of the pupils
@@ -302,6 +302,7 @@ int main(int argc, const char **argv) {
         std::vector<cv::Point2f> pupilPositions;
         std::vector<cv::Point2f> cursorPositions;
 
+        //cv::namedWindow("testing", CV_WINDOW_NORMAL);
         cv::destroyWindow("Reference Point");
         while (!calibrate) {
             capture.read(frame);
